@@ -1,14 +1,29 @@
 import arcade
 
 # Set up the constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-SCREEN_TITLE = "SeaGridGame Test"
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+WINDOW_TITLE = "SeaGridGame Test"
+
+class GameView(arcade.Window):
+    """
+    Main Game Window
+    """
+
+    def __init__(self):
+        super().__init__(WINDOW_WIDTH,WINDOW_HEIGHT,WINDOW_TITLE)
+        self.background_color = arcade.csscolor.SEA_GREEN
+    
+    def setup(self):
+        pass
+
+    def on_draw(self):
+        self.clear()
 
 def main():
     """ Main method """
-    arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    arcade.set_background_color(arcade.color.AMAZON)
+    window = GameView()
+    window.setup()
     arcade.run()
 
 if __name__ == "__main__":
