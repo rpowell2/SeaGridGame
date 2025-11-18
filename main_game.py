@@ -1,4 +1,5 @@
 import math
+import random
 import arcade
 
 # Set up the constants
@@ -7,9 +8,13 @@ WINDOW_HEIGHT = 600
 WINDOW_TITLE = "SeaGridGame Test"
 IMAGE_ROTATION = -90
 
+class Resource(arcade.Sprite):
+    def __init__(self):
+        super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Tiles\\tile_71.png")
+
 class Player(arcade.Sprite):
     def __init__(self):
-        super().__init__("C:\Dev\SeaGridGame\kenney_pirate-pack\PNG\Default size\Ships\dinghySmall1.png")
+        super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Ships\\dinghySmall1.png")
 
         self._destination_point = None
         self.speed = 300
@@ -76,20 +81,31 @@ class GameView(arcade.View):
         self.background_color = arcade.color.DEEP_SKY_BLUE        
         self.player_sprite = None
         self.player_list = None
+        self.resource_list = None
 
         self.background_color = arcade.csscolor.DEEP_SKY_BLUE
     
     def setup(self):
         self.player_list = arcade.SpriteList()
+        self.resource_list = arcade.SpriteList()
         self.player_sprite = Player()
         self.player_sprite.center_x = 64
         self.player_sprite.center_y = 128
         self.player_list.append(self.player_sprite)
+
+        resource_amount = random.randint(1,10)
+        for i in range(resource_amount):
+            resource_sprite = Resource()
+            resource_sprite.center_x = random.randint(0,WINDOW_HEIGHT)
+            resource_sprite.center_y = random.randint(0,WINDOW_WIDTH)
+            self.resource_list.append(resource_sprite)
+        
         pass
 
     def on_draw(self):
         self.clear()
         self.player_list.draw()
+        self.resource_list.draw()
     
     def on_update(self, delta_time):
         self.player_list.update(delta_time)
