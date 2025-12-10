@@ -1,6 +1,10 @@
 import math
 import random
 import arcade
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+escaped_script_dir = script_dir.replace("\\", "\\\\")
+
 
 # Set up the constants
 WINDOW_WIDTH = 800
@@ -10,11 +14,17 @@ IMAGE_ROTATION = -90
 
 class Resource(arcade.Sprite):
     def __init__(self):
-        super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Tiles\\tile_71.png")
+        # super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Tiles\\tile_71.png")
+        resource_path=escaped_script_dir+"\\kenney_pirate-pack\\PNG\\Default size\\Tiles\\"
+        resource_file=resource_path+"tile_71.png"
+        super().__init__(resource_file)
 
 class Player(arcade.Sprite):
     def __init__(self):
-        super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Ships\\dinghySmall1.png")
+        # super().__init__("C:\\Dev\\SeaGridGame\\kenney_pirate-pack\\PNG\\Default size\\Ships\\dinghySmall1.png")
+        player_path = escaped_script_dir + "\\kenney_pirate-pack\\PNG\\Default size\\Tiles\\"
+        player_file = player_path + "tile_71.png"
+        super().__init__(player_file)
 
         self._destination_point = None
         self.speed = 300
@@ -30,7 +40,7 @@ class Player(arcade.Sprite):
         self.change_x = 0.0
         self.change_y = 0.0
     
-    def update(self, delta_time: float = 1/60):
+    def update (self, delta_time: float = 1/60):
         if not self._destination_point:
             self.change_x = 0
             self.change_y = 0
