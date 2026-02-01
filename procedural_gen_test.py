@@ -1,6 +1,8 @@
 import arcade
 from random import randrange
 
+# This is just a sample program to demonstrate procedural generation.  Not part of the game!
+
 # screen size constants
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
