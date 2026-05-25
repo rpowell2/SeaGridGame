@@ -1,123 +1,329 @@
 """
-Simple Multiplayer Chat + Movement Game (Server + Client)
-=========================================================
-A minimal real-time multiplayer game using Python sockets.
+SECURE MULTIPLAYER GAME (Python)
+================================
 
-Features:
-- Multiple players connect to a server
-- Players move on a 2D grid
-- Server broadcasts player positions
-- Text-based rendering
+Architecture:
+- Authoritative server
+- TCP networking
+- Encrypted communication (TLS)
+- Login authentication
+- Session tokens
+- Rate limiting
+- Input validation
+- Thread-safe state
+- Anti-cheat movement validation
 
-Run:
-1. Start server:
-   python server.py
+Files:
+    server.py
+    client.py
 
-2. Start clients in separate terminals:
-   python client.py
+INSTALL:
+---------
+pip install bcrypt
 
-Controls:
-- W = up
-- S = down
-- A = left
-- D = right
-- Q = quit
+GENERATE TLS CERTIFICATE:
+-------------------------
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+RUN:
+----
+python server.py
+python client.py
+
+Default users:
+---------------
+username: player1
+password: password123
 """
 
-# =========================
+# ============================================================
 # server.py
-# =========================
+# ============================================================
 
 import socket
+import ssl
 import threading
 import json
+import time
+import bcrypt
+import secrets
 
 HOST = "0.0.0.0"
 PORT = 5555
 
+WORLD_W = 30
+WORLD_H = 15
+
+MAX_PACKET_SIZE = 2048
+MOVE_COOLDOWN = 0.05
+
+# ============================================================
+# USER DATABASE (replace with real DB)
+# ============================================================
+
+users = {
+    "player1": bcrypt.hashpw(
+        b"password123",
+        bcrypt.gensalt()
+    )
+}
+
+# ============================================================
+# GAME STATE
+# ============================================================
+
 players = {}
-clients = []
+clients = {}
+sessions = {}
 
 lock = threading.Lock()
 
-def broadcast_game_state():
-    state = json.dumps(players).encode()
+# ============================================================
+# HELPERS
+# ============================================================
 
-    disconnected = []
+def send_json(conn, data):
+    payload = json.dumps(data).encode()
 
-    for client in clients:
-        try:
-            client.sendall(state)
-        except:
-            disconnected.append(client)
+    if len(payload) > MAX_PACKET_SIZE:
+        return
 
-    for dc in disconnected:
-        clients.remove(dc)
+    conn.sendall(payload + b"\n")
+
+
+def recv_json(conn):
+    data = conn.recv(MAX_PACKET_SIZE)
+
+    if not data:
+        return None
+
+    return json.loads(data.decode())
+
+
+def broadcast_state():
+    with lock:
+        state = {
+            "type": "state",
+            "players": players
+        }
+
+        dead = []
+
+        for conn in clients.values():
+            try:
+                send_json(conn, state)
+            except:
+                dead.append(conn)
+
+        for dc in dead:
+            try:
+                dc.close()
+            except:
+                pass
+
+
+def valid_move(x, y):
+    return 0 <= x < WORLD_W and 0 <= y < WORLD_H
+
+
+# ============================================================
+# AUTH
+# ============================================================
+
+def authenticate(username, password):
+    if username not in users:
+        return False
+
+    return bcrypt.checkpw(
+        password.encode(),
+        users[username]
+    )
+
+
+def create_session(username):
+    token = secrets.token_hex(32)
+
+    sessions[token] = {
+        "username": username,
+        "created": time.time()
+    }
+
+    return token
+
+
+# ============================================================
+# CLIENT HANDLER
+# ============================================================
 
 def handle_client(conn, addr):
-    print(f"[NEW CONNECTION] {addr}")
+    print(f"[CONNECTED] {addr}")
 
-    with lock:
-        player_id = str(addr[1])
-        players[player_id] = {"x": 5, "y": 5}
-        clients.append(conn)
-
-    broadcast_game_state()
+    username = None
 
     try:
-        while True:
-            data = conn.recv(1024).decode()
+        # ----------------------------------------------------
+        # LOGIN
+        # ----------------------------------------------------
 
-            if not data:
+        login = recv_json(conn)
+
+        if not login:
+            return
+
+        if login.get("type") != "login":
+            return
+
+        username = login.get("username", "")
+        password = login.get("password", "")
+
+        if not authenticate(username, password):
+            send_json(conn, {
+                "type": "error",
+                "message": "Invalid credentials"
+            })
+            return
+
+        token = create_session(username)
+
+        send_json(conn, {
+            "type": "login_success",
+            "token": token
+        })
+
+        # ----------------------------------------------------
+        # ADD PLAYER
+        # ----------------------------------------------------
+
+        with lock:
+            players[username] = {
+                "x": 5,
+                "y": 5,
+                "hp": 100
+            }
+
+            clients[username] = conn
+
+        broadcast_state()
+
+        last_move = 0
+
+        # ----------------------------------------------------
+        # GAME LOOP
+        # ----------------------------------------------------
+
+        while True:
+            packet = recv_json(conn)
+
+            if not packet:
                 break
 
-            move = data.strip().upper()
+            # --------------------------------------------
+            # RATE LIMITING
+            # --------------------------------------------
+
+            now = time.time()
+
+            if now - last_move < MOVE_COOLDOWN:
+                continue
+
+            last_move = now
+
+            # --------------------------------------------
+            # VALIDATE SESSION
+            # --------------------------------------------
+
+            if packet.get("token") != token:
+                continue
+
+            action = packet.get("action")
 
             with lock:
-                player = players[player_id]
+                player = players.get(username)
 
-                if move == "W":
-                    player["y"] -= 1
-                elif move == "S":
-                    player["y"] += 1
-                elif move == "A":
-                    player["x"] -= 1
-                elif move == "D":
-                    player["x"] += 1
+                if not player:
+                    break
 
-            broadcast_game_state()
+                new_x = player["x"]
+                new_y = player["y"]
+
+                if action == "UP":
+                    new_y -= 1
+
+                elif action == "DOWN":
+                    new_y += 1
+
+                elif action == "LEFT":
+                    new_x -= 1
+
+                elif action == "RIGHT":
+                    new_x += 1
+
+                # ----------------------------------------
+                # SERVER-SIDE VALIDATION
+                # ----------------------------------------
+
+                if valid_move(new_x, new_y):
+                    player["x"] = new_x
+                    player["y"] = new_y
+
+            broadcast_state()
 
     except Exception as e:
-        print(f"[ERROR] {e}")
+        print("[ERROR]", e)
 
     finally:
-        with lock:
-            if player_id in players:
-                del players[player_id]
-
-            if conn in clients:
-                clients.remove(conn)
-
-        conn.close()
-        broadcast_game_state()
         print(f"[DISCONNECTED] {addr}")
 
-def start_server():
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind((HOST, PORT))
-    server.listen()
+        with lock:
+            if username in players:
+                del players[username]
 
-    print(f"[SERVER STARTED] {HOST}:{PORT}")
+            if username in clients:
+                del clients[username]
+
+        try:
+            conn.close()
+        except:
+            pass
+
+        broadcast_state()
+
+
+# ============================================================
+# SERVER START
+# ============================================================
+
+def start_server():
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+
+    context.load_cert_chain(
+        certfile="cert.pem",
+        keyfile="key.pem"
+    )
+
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    server.bind((HOST, PORT))
+    server.listen(10)
+
+    print(f"[SECURE SERVER RUNNING] {HOST}:{PORT}")
 
     while True:
-        conn, addr = server.accept()
+        client_socket, addr = server.accept()
+
+        secure_conn = context.wrap_socket(
+            client_socket,
+            server_side=True
+        )
 
         thread = threading.Thread(
             target=handle_client,
-            args=(conn, addr),
+            args=(secure_conn, addr),
             daemon=True
         )
+
         thread.start()
+
 
 if __name__ == "__main__":
     start_server()
