@@ -14,6 +14,27 @@ Favorite games:
            - son and I played this alot
 Ideas:
 - multiplayer game
+    - Players securely login
+    - Customize their players name, face, body, etc.
+    - start with zero tools
+    - can train animals as pets
+    - has a login screen
+    - starts off in a random location within the "inside" of the world map
+
+- World Map
+    - procedurally generated map.
+        - Minecraft generation is appealing given its rich diversity of land features
+            - such as really high mountains, caves, and under water diversity
+        - Unlike minecraft, there shouldn't be floating islands in the "inside" map as those don't exist.
+            - perhaps on other planets this mechanic would allowed.
+    - Once generated, the map doesn't change unless we introduce mechanics to allow change.
+    - Players can build houses and other things on land and water.
+    - PLayers need to mark their territory so that it's not "nerfed" by other players.
+    - Need to store generated chunks.
+    - Tornadoes, floods, volcanic runoff, extreme wet and dry seasons can change the map
+    - "fog of war" type maps, where everything is black or fogged out until explored.
+    - Some water is bluer than others.  This is important for quests related for my "wifey".
+        - she wants to find the bluest water in the map.  Talking like Antigua blue!
 - "flat earth" theme
    - Earth is not really "flat", that's just stupid.  It's much much bigger than we're taught.
    - The map we're taught and know of within the overall "flat earth" game map is considered "inside".
@@ -116,6 +137,8 @@ Toying with the idea to incorporate a Battlestar Galactica theme
     - AI intelligence has determined that humans are too destructive, doesn't look out for its good, and needs to be eliminated
     - This concept might be best discovered outside the 2nd or 3rd ring of the world map
         - Otherwise it doesn't fit well with the King/Queen era starting point
+    - Important deviation from the tv series is that instead of searching for Earth, we're not searching for another planet to settle
+
 
 Another concept - maybe some realms mentioned above are actually found on other planets.
     - Might explain why realms haven't mixed.
