@@ -1,0 +1,11 @@
+players[username] = {
+    "x": 5,
+    "y": 5,
+    "hp": 100,
+
+    "inventory": {
+        "wood": 0,
+        "stone": 0,
+        "seeds": 5
+    }
+}

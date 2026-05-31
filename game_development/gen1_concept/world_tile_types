@@ -1,0 +1,28 @@
+Grass
+Trees
+Stone
+Soil
+Water
+Town
+
+for y in range(height):
+    for x in range(width):
+
+        roll = random.random()
+
+        if roll < .10:
+            TREE
+
+        elif roll < .15:
+            STONE
+
+        elif roll < .18:
+            WATER
+
+        else:
+            GRASS
+
+persistence
+
+world.json
+

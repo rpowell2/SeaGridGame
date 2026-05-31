@@ -1,0 +1,12 @@
+while True:
+
+    grow_crops()
+
+    respawn_resources()
+
+    save_world()
+
+    broadcast_state()
+
+    time.sleep(1)
+

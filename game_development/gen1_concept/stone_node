@@ -1,0 +1,12 @@
+{
+    "type": "STONE_NODE",
+    "hp": 3
+}
+
+hit
+
+hp -= 1
+
+destroy
+
+stone += random amount
