@@ -1,21 +1,37 @@
-Needs a pirate game.
-Story telling game first.
-Think Age of Empires
-Strategy, fight against each other for resources and land (because they're pirates)
-Has own quests like Runescape.
-Interact with people.
-Compete with each other.
-Sideline quests gets you further in the game.
-Pirates, unlock land. Upgrade ship to reach land.
-Mermaids that can eat you.
-specific armor and weapons and level to even defeat monstors.
-Destroy other people and their ships and get everything they had, get xp, which eliminates your need to go through those quests.
-Can jump around and not mess up the plot.
-Comes together in the end to align with story line.
-Can choose different paths.
-Choices in quests, depending on quests you chose, determines how you turn out - evil villian arc, love match making, etc.
-have a ship, develop crew, travel around, need resources (food, weapons, money, beer, repair materials (wooden casks, salt and brine, chickens for fresh eggs and meat, nails, tar, navigational instruments, sea charts, gun powder, flint lock, medical chests, ..), deploy to islands, coastal cities, plunder if there's people, taverns give life points, monstors in the sea to get points.
-Set in time period with Kings and Queens, militia, pirates can get hung,
-Fight against buddies, and join together to become your own crew.
-Customize ship and character.
-End Goal - become king pirate, best crew, notorious pirate like Blackbeard.
+Name: m
+Favorite games: harvest moon, age of empires
+Ideas:
+- Needs a pirate game.
+- Story telling game first.
+- Think Age of Empires
+- Strategy, fight against each other for resources and land (because they're pirates)
+- Has own quests like Runescape.
+- Interact with people.
+- Compete with each other.
+- Sideline quests gets you further in the game.
+- Pirates, unlock land. Upgrade ship to reach land.
+- Mermaids that can eat you.
+- specific armor and weapons and level to even defeat monstors.
+- Destroy other people, their ships, and get everything they had, get xp, eliminates your need to go through those quests.
+- Can jump around and not mess up the plot.
+- Comes together in the end to align with story line.
+- Can choose different paths.
+- Choices in quests, depending on quests you chose, determines how you turn out:
+   - evil villian arc,
+   - love match making,
+   - things like that.
+- Have a ship, develop crew, travel around, need resources:
+   - food,
+   - weapons,
+   - money,
+   - beer,
+   - repair materials:
+      - wooden casks, salt and brine, chickens for fresh eggs and meat, nails, tar,
+      - navigational instruments, sea charts, gun powder, flint lock, medical chests,
+   - Deploy to islands, coastal cities, plunder if there's people
+   - Taverns give life points
+   - Monstors in the sea to get points.
+- Set in time period with Kings and Queens, militia, pirates can get hung,
+- Fight against buddies, and join together to become your own crew.
+- Customize ship and character.
+- End Goal - become king pirate, best crew, notorious pirate like Blackbeard.

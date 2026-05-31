@@ -1,6 +1,8 @@
-Need dinosaurs
-Dinosaurs roars.
-Some eat leaves, some eat meat
-lay eggs.
-red dinosaurs
-walk
+Name: m
+Favorite games: harvest moon, age of empires
+Ideas:
+- Need dinosaurs, Dinosaurs roars.
+- Some eat leaves, some eat meat
+- lay eggs.
+- red dinosaurs
+- walk
