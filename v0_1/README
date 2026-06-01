@@ -1,0 +1,29 @@
+v0_1/
+│
+├── client.py
+├── server.py
+│
+├── config/
+│   └── settings.py
+│
+├── network/
+│   ├── protocol.py
+│   └── messages.py
+│
+├── world/
+│   ├── generator.py
+│   ├── chunk.py
+│   ├── storage.py
+│   └── biome.py
+│
+├── tools/
+│   ├── world_generator.py
+│   ├── world_viewer.py
+│   ├── biome_viewer.py
+│   └── chunk_viewer.py
+│
+└── data/
+    ├── world/
+    │   └── chunks/
+    └── saves/
+

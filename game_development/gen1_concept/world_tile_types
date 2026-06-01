@@ -26,3 +26,226 @@ persistence
 
 world.json
 
+world[x][y] = {
+    "elevation": 0.73,
+    "moisture": 0.42,
+    "temperature": 0.61,
+    "biome": "FOREST",
+    "tile": "TREE"
+}
+
+
+import json
+import random
+
+from noise import pnoise2
+
+WORLD_WIDTH = 1000
+WORLD_HEIGHT = 1000
+
+SEED = random.randint(1, 999999)
+
+ELEVATION_SCALE = 200.0
+MOISTURE_SCALE = 300.0
+TEMP_SCALE = 400.0
+
+OCTAVES = 6
+PERSISTENCE = 0.5
+LACUNARITY = 2.0
+
+
+
+def noise_value(x, y, scale):
+
+    value = pnoise2(
+        x / scale,
+        y / scale,
+        octaves=OCTAVES,
+        persistence=PERSISTENCE,
+        lacunarity=LACUNARITY,
+        repeatx=999999,
+        repeaty=999999,
+        base=SEED
+    )
+
+    return (value + 1.0) / 2.0
+
+
+def get_elevation(x, y):
+
+return noise_value(
+    x,
+    y,
+    ELEVATION_SCALE
+)
+
+def get_moisture(x, y):
+
+    return noise_value(
+        x + 5000,
+        y + 5000,
+        MOISTURE_SCALE
+    )
+
+
+def get_temperature(x, y):
+
+    latitude = y / WORLD_HEIGHT
+
+    latitude_effect = abs(latitude - 0.5)
+
+    latitude_effect = 1.0 - latitude_effect * 2
+
+    noise = noise_value(
+        x + 10000,
+        y + 10000,
+        TEMP_SCALE
+    )
+
+    return (latitude_effect * 0.7) + (noise * 0.3)
+
+
+def determine_biome(
+    elevation,
+    moisture,
+    temperature
+):
+
+    if elevation < 0.30:
+        return "OCEAN"
+
+    if elevation < 0.35:
+        return "BEACH"
+
+    if elevation > 0.80:
+        return "MOUNTAIN"
+
+    if temperature < 0.25:
+
+        if moisture > 0.5:
+            return "SNOW"
+
+        return "TUNDRA"
+
+    if moisture < 0.20:
+        return "DESERT"
+
+    if moisture > 0.75:
+        return "SWAMP"
+
+    if moisture > 0.55:
+        return "FOREST"
+
+    return "PLAINS"
+
+def generate_rivers(world):
+
+    for _ in range(100):
+
+        x = random.randint(0, WORLD_WIDTH - 1)
+        y = random.randint(0, WORLD_HEIGHT - 1)
+
+        tile = world[y][x]
+
+        if tile["elevation"] < 0.75:
+            continue
+
+        carve_river(world, x, y)
+
+def carve_river(world, start_x, start_y):
+
+    x = start_x
+    y = start_y
+
+    for _ in range(1000):
+
+        world[y][x]["tile"] = "RIVER"
+
+        current = world[y][x]["elevation"]
+
+        lowest = current
+        next_x = x
+        next_y = y
+
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+
+                nx = x + dx
+                ny = y + dy
+
+                if (
+                    nx < 0 or
+                    ny < 0 or
+                    nx >= WORLD_WIDTH or
+                    ny >= WORLD_HEIGHT
+                ):
+                    continue
+
+                e = world[ny][nx]["elevation"]
+
+                if e < lowest:
+                    lowest = e
+                    next_x = nx
+                    next_y = ny
+
+        if next_x == x and next_y == y:
+            break
+
+        x = next_x
+        y = next_y
+
+        if lowest < 0.30:
+            break
+
+def generate_world():
+
+    world = []
+
+    for y in range(WORLD_HEIGHT):
+
+        row = []
+
+        for x in range(WORLD_WIDTH):
+
+            elevation = get_elevation(x, y)
+
+            moisture = get_moisture(x, y)
+
+            temperature = get_temperature(x, y)
+
+            biome = determine_biome(
+                elevation,
+                moisture,
+                temperature
+            )
+
+            row.append({
+                "elevation": elevation,
+                "moisture": moisture,
+                "temperature": temperature,
+                "biome": biome,
+                "tile": biome
+            })
+
+        world.append(row)
+
+    generate_rivers(world)
+
+    return world
+
+
+{
+    "seed": seed,
+    "chunks": {}
+}
+
+
+CHUNK_SIZE = 64
+chunk_x = x // CHUNK_SIZE
+chunk_y = y // CHUNK_SIZE
+world/
+    0_0.json
+    0_1.json
+    1_0.json
+    1_1.json
+
