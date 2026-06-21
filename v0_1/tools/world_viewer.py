@@ -5,6 +5,7 @@ from PIL import Image
 
 from v0_1.world.storage import load_chunk
 from v0_1.config.settings import CHUNK_SIZE
+from v0_1.config.settings import WORLD_RADIUS
 
 
 # ------------------------------------------------------------
@@ -30,7 +31,7 @@ BIOME_COLORS = {
 
 OUTPUT_FILE = "world.png"
 
-CHUNK_RADIUS = 2   # must match generator range (-2..2)
+CHUNK_RADIUS = WORLD_RADIUS   # must match generator range, Example: (-2..2)
 
 PIXEL_SCALE = 1    # 1 tile = 1 pixel (fast + simple)
 

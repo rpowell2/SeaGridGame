@@ -1,8 +1,12 @@
 # v0_1/config/settings.py
 
-WORLD_SEED = 1337
+# WORLD_SEED = 1337
+WORLD_SEED = 12
 
 CHUNK_SIZE = 64
+
+WORLD_RADIUS = 10
+
 
 WORLD_WATER_LEVEL = 0.30
 

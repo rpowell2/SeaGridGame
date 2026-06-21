@@ -1,0 +1,18 @@
+Hey! We are picking up our project for the multiplayer flat-earth age-of-sail sandbox game.
+Here is our current development status to reload into your context:
+
+1. CURRENT FILE CODE STATES:
+   - 'worldmap_gen.py': Fully functional Direct Raster-Procedural chunk engine. It reads 'map.jpg', uses value-fractal non-tiling noise, filters the equator lines, isolates South America/Andes, and generates the white ice sheets for Greenland and the outer procedural rings.
+   - 'extractor.py': Fully operational HSV saturation/hue vectorizer that uses contour squeezing to safely output clean, non-crashing vector definitions to 'world_blueprint.json'.
+
+2. RECENT SUCCESSES FIXES:
+   - Replaced fragile automated data logic with a bulletproof Direct Raster Lookup mapping system.
+   - Eliminated vertical inversion bugs, artificial central clipping rings, dark ocean blotches, and the thin dashed equator ring artifact.
+
+3. GAME ARCHITECTURE DECISION:
+   - We committed 100% to a HYBRID ARCHITECTURE.
+   - Long-distance travel, trade logistics, and naval sailing happen on the 2D overview map at a compressed scale.
+   - Local actions (Stardew-style farming, house/town building, NPC quest hubs, and first-person naval/sea-monster combat) load into dedicated 3D/Isometric Local Instances.
+   - Created a symbiotic economy loop where homesteaders supply mariners with advanced shipcrafting resources.
+
+Let's look at our upcoming task roadmap. What are we building next?
